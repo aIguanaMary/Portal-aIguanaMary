@@ -1,12 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
-import { Menu } from "lucide-react";
+import { Leaf, Dna, Users, Stethoscope, Menu } from "lucide-react";
 
-// Configuração das Fontes
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const space = Space_Grotesk({ subsets: ["latin"], variable: "--font-space" });
 
 export const metadata: Metadata = {
   title: "Iguana Mary",
@@ -20,19 +16,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br" className="dark">
-      <head>
-        {/* FONT AWESOME (CDN) */}
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
-          crossOrigin="anonymous"
-          referrerPolicy="no-referrer"
-        />
-      </head>
 
       <body
-        className={`${inter.variable} ${space.variable} bg-background text-white antialiased overflow-x-hidden`}
+        className="bg-background text-white antialiased overflow-x-hidden"
       >
         {/* --- FUNDO BASE --- */}
         <div className="fixed inset-0 z-[-1] bg-[#050505]">
@@ -70,7 +56,7 @@ export default function RootLayout({
             {/* MENU CENTRAL */}
             <div className="hidden md:flex items-center gap-10">
               <a href="#" className="group flex flex-col items-center gap-1 cursor-pointer">
-                <i className="fa-solid fa-cannabis text-2xl text-[#39FF14] opacity-50 group-hover:opacity-100 transition-all duration-300 group-hover:drop-shadow-[0_0_10px_rgba(57,255,20,0.8)] group-hover:scale-110" />
+                <Leaf className="h-6 w-6 text-2xl text-[#39FF14] opacity-50 group-hover:opacity-100 transition-all duration-300 group-hover:drop-shadow-[0_0_10px_rgba(57,255,20,0.8)] group-hover:scale-110" />
                 <span className="text-xs font-space font-medium uppercase tracking-wider text-gray-400 group-hover:text-white transition-colors relative">
                   Simule seu Grow
                   <span className="absolute -bottom-2 left-1/2 w-0 h-[2px] bg-[#39FF14] group-hover:w-full group-hover:left-0 transition-all duration-300" />
@@ -78,7 +64,7 @@ export default function RootLayout({
               </a>
 
               <a href="#" className="group flex flex-col items-center gap-1 cursor-pointer">
-                <i className="fa-solid fa-dna text-2xl text-[#39FF14] opacity-50 group-hover:opacity-100 transition-all duration-300 group-hover:drop-shadow-[0_0_10px_rgba(57,255,20,0.8)] group-hover:scale-110" />
+                <Dna className="h-6 w-6 text-2xl text-[#39FF14] opacity-50 group-hover:opacity-100 transition-all duration-300 group-hover:drop-shadow-[0_0_10px_rgba(57,255,20,0.8)] group-hover:scale-110" />
                 <span className="text-xs font-space font-medium uppercase tracking-wider text-gray-400 group-hover:text-white transition-colors relative">
                   Genéticas
                   <span className="absolute -bottom-2 left-1/2 w-0 h-[2px] bg-[#39FF14] group-hover:w-full group-hover:left-0 transition-all duration-300" />
@@ -86,7 +72,7 @@ export default function RootLayout({
               </a>
 
               <a href="#" className="group flex flex-col items-center gap-1 cursor-pointer">
-                <i className="fa-solid fa-house-medical text-2xl text-[#39FF14] opacity-50 group-hover:opacity-100 transition-all duration-300 group-hover:drop-shadow-[0_0_10px_rgba(57,255,20,0.8)] group-hover:scale-110" />
+                <Users className="h-6 w-6 text-2xl text-[#39FF14] opacity-50 group-hover:opacity-100 transition-all duration-300 group-hover:drop-shadow-[0_0_10px_rgba(57,255,20,0.8)] group-hover:scale-110" />
                 <span className="text-xs font-space font-medium uppercase tracking-wider text-gray-400 group-hover:text-white transition-colors relative">
                   Associações
                   <span className="absolute -bottom-2 left-1/2 w-0 h-[2px] bg-[#39FF14] group-hover:w-full group-hover:left-0 transition-all duration-300" />
@@ -94,7 +80,7 @@ export default function RootLayout({
               </a>
 
               <a href="#" className="group flex flex-col items-center gap-1 cursor-pointer">
-                <i className="fa-solid fa-user-tie text-2xl text-[#39FF14] opacity-50 group-hover:opacity-100 transition-all duration-300 group-hover:drop-shadow-[0_0_10px_rgba(57,255,20,0.8)] group-hover:scale-110" />
+                <Stethoscope className="h-6 w-6 text-2xl text-[#39FF14] opacity-50 group-hover:opacity-100 transition-all duration-300 group-hover:drop-shadow-[0_0_10px_rgba(57,255,20,0.8)] group-hover:scale-110" />
                 <span className="text-xs font-space font-medium uppercase tracking-wider text-gray-400 group-hover:text-white transition-colors relative">
                   Profissionais
                   <span className="absolute -bottom-2 left-1/2 w-0 h-[2px] bg-[#39FF14] group-hover:w-full group-hover:left-0 transition-all duration-300" />

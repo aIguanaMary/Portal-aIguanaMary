@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
 
 type LeafProps = {
   id: number;
@@ -18,7 +17,6 @@ type LeafProps = {
   blur: number;
 };
 
-// Usamos as bases RGB puras para injetar variações de transparência na matemática
 const COLOR_PALETTES_RGB = [
   "57, 255, 20",   // Verde Neon
   "138, 43, 226",  // Roxo Elétrico
@@ -30,32 +28,28 @@ function LeafRain() {
 
   useEffect(() => {
     const generatedLeaves: LeafProps[] = [];
-    const leafCount = 32; // Aumentado em ~35%
+    const leafCount = 32;
 
     for (let i = 0; i < leafCount; i++) {
       const rgb = COLOR_PALETTES_RGB[Math.floor(Math.random() * COLOR_PALETTES_RGB.length)];
       
-      // Variações finas de cor para não ficar pragmático (um vidro mais limpo, outro mais neon)
       const bgOpacity = (0.05 + Math.random() * 0.15).toFixed(2);
       const glowOpacity = (0.2 + Math.random() * 0.45).toFixed(2);
       
-      // A MAGIA DO 3D: 30% de chance da folha passar na FRENTE do texto
       const isFront = Math.random() > 0.7; 
 
       generatedLeaves.push({
         id: i,
-        // Espalhamento de -10vw a 110vw para evitar acúmulo nos cantos
         left: `${Math.random() * 120 - 10}vw`,
-        // Se a folha está na frente, ela é levemente maior por conta da perspectiva
         size: isFront ? (45 + Math.random() * 40) : (20 + Math.random() * 30),
         duration: 12 + Math.random() * 18,
         delay: Math.random() * -25,
-        drift: `${(Math.random() - 0.5) * 60}vw`, // Mais variação no vento
+        drift: `${(Math.random() - 0.5) * 60}vw`,
         rotation: `${(Math.random() - 0.5) * 720}deg`,
         colorBg: `rgba(${rgb}, ${bgOpacity})`,
         colorGlow: `rgba(${rgb}, ${glowOpacity})`,
-        zIndex: isFront ? 30 : 10, // z-10 passa atrás do texto (z-20), z-30 passa na frente
-        blur: 3 + Math.random() * 5, // Variação de embaçado no vidro
+        zIndex: isFront ? 30 : 10,
+        blur: 3 + Math.random() * 5,
       });
     }
     setLeaves(generatedLeaves);
@@ -66,12 +60,12 @@ function LeafRain() {
       {leaves.map((leaf) => (
         <div
           key={leaf.id}
-          className="absolute top-[-15vh]" // Começa bem acima para não spawnar do nada
+          className="absolute top-[-15vh]"
           style={{
             left: leaf.left,
             width: `${leaf.size}px`,
             height: `${leaf.size * 1.12}px`,
-            zIndex: leaf.zIndex, // Define se a folha flutua na frente ou atrás
+            zIndex: leaf.zIndex,
             '--drift': leaf.drift,
             '--rotation': leaf.rotation,
             animation: `fallingLeaf ${leaf.duration}s linear ${leaf.delay}s infinite`,
@@ -92,9 +86,8 @@ function LeafRain() {
               backdropFilter: `blur(${leaf.blur}px)`,
               WebkitBackdropFilter: `blur(${leaf.blur}px)`,
               background: `linear-gradient(135deg, ${leaf.colorBg} 0%, rgba(0,0,0,0) 100%)`,
-              // O brilho interior agora é proporcional ao tamanho da folha
               boxShadow: `inset 0 0 ${leaf.size * 0.4}px ${leaf.colorGlow}`,
-              border: `1px solid rgba(255,255,255,0.05)`, // Borda de vidro sutil
+              border: `1px solid rgba(255,255,255,0.05)`,
             }}
           />
         </div>
@@ -107,7 +100,6 @@ export default function Home() {
   return (
     <div className="relative w-full overflow-hidden font-sans selection:bg-[#39FF14] selection:text-black min-h-screen">
       
-      {/* --- ANIMAÇÕES GLOBAIS --- */}
       <style jsx global>{`
         @keyframes iguanaScreenSheen {
           0% { transform: translateX(-120%) rotate(18deg); opacity: 0; }
@@ -130,7 +122,6 @@ export default function Home() {
         }
       `}</style>
 
-      {/* --- LUZES DE FUNDO --- */}
       <div className="pointer-events-none absolute inset-0 z-0">
         <div className="absolute left-1/2 top-[42%] h-[80vh] w-[80vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#39FF14] opacity-[0.08] blur-[150px]" />
         <div className="absolute left-1/2 top-[46%] h-[70vh] w-[70vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#8A2BE2] opacity-[0.06] blur-[170px]" />
@@ -151,13 +142,10 @@ export default function Home() {
         />
       </div>
 
-      {/* --- CHUVA DE FOLHAS DE VIDRO --- */}
-      {/* Removi a classe 'z-10' do container pai para permitir que as folhas cruzem a camada do texto livremente */}
       <div className="absolute inset-0 pointer-events-none">
         <LeafRain />
       </div>
 
-      {/* --- CONTEÚDO PRINCIPAL (z-20) --- */}
       <section className="relative z-20 mx-auto flex min-h-[calc(100vh-6rem)] max-w-6xl flex-col items-center justify-center px-4 text-center pointer-events-none">
         <motion.div
           initial={{ opacity: 0, scale: 0.965 }}
@@ -193,18 +181,6 @@ export default function Home() {
           Guias de Cultivo e uma{" "}
           <span className="text-[#a78bfa]">Rede Profissional</span>.
         </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.55 }}
-          className="mt-12 pointer-events-auto"
-        >
-          <button className="group relative flex items-center gap-3 rounded-full bg-[#39FF14] px-12 py-5 text-lg font-black tracking-wider text-black shadow-[0_0_30px_rgba(57,255,20,0.3)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_60px_rgba(57,255,20,0.6)]">
-            VER GENÉTICAS
-            <ArrowRight className="h-6 w-6 transition-transform group-hover:translate-x-2" />
-          </button>
-        </motion.div>
       </section>
     </div>
   );

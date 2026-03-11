@@ -1,5 +1,5 @@
 DISPLAY_NAME=Iguana Mary
-DESCRIPTION=Portal ultramoderno de cultura cannabica
+DESCRIPTION=Portal ultramoderno
 MAIN=package.json
 MEMORY=512
 VERSION=recommended

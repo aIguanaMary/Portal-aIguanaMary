@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import "./globals.css";
-import { Leaf, Dna, Users, Stethoscope, Menu } from "lucide-react";
-
+// Ícones novos adicionados: BookOpen (Guias) e Sprout (Bancos de Semente)
+import { Leaf, Dna, Users, Stethoscope, Menu, BookOpen, Sprout } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Iguana Mary",
@@ -16,10 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br" className="dark">
-
-      <body
-        className="bg-background text-white antialiased overflow-x-hidden"
-      >
+      <body className="bg-background text-white antialiased overflow-x-hidden">
         {/* --- FUNDO BASE --- */}
         <div className="fixed inset-0 z-[-1] bg-[#050505]">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
@@ -30,7 +27,7 @@ export default function RootLayout({
           <div className="absolute inset-0 bg-black/80 backdrop-blur-md border-b border-[#39FF14]/20 shadow-[0_5px_20px_rgba(0,0,0,0.8)]" />
 
           <div className="relative max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
-            {/* LOGO (sua iguana) */}
+            {/* LOGO */}
             <div className="flex items-center gap-3 cursor-pointer group select-none">
               <div className="relative p-2 rounded-xl bg-black border border-[#39FF14]/30 group-hover:border-[#39FF14] transition-all duration-500 shadow-[0_0_15px_rgba(57,255,20,0.1)] group-hover:shadow-[0_0_25px_rgba(57,255,20,0.35)]">
                 <Image
@@ -47,14 +44,15 @@ export default function RootLayout({
                 <span className="font-space font-black text-2xl tracking-[0.18em] text-white group-hover:text-[#39FF14] transition-colors drop-shadow-md">
                   IGUANA MARY
                 </span>
+                {/* Texto atualizado conforme pedido */}
                 <span className="text-[10px] uppercase tracking-[0.34em] text-gray-400 group-hover:text-white transition-colors">
-                  Portal Cannábico • Mapa do Grow • Comunidade
+                  Portal Cannábico • Genéticas • Comunidade
                 </span>
               </div>
             </div>
 
-            {/* MENU CENTRAL */}
-            <div className="hidden md:flex items-center gap-10">
+            {/* MENU CENTRAL - Reduzi um pouco o gap para caberem todos os itens nos ecrãs */}
+            <div className="hidden md:flex items-center gap-6">
               <a href="#" className="group flex flex-col items-center gap-1 cursor-pointer">
                 <Leaf className="h-6 w-6 text-2xl text-[#39FF14] opacity-50 group-hover:opacity-100 transition-all duration-300 group-hover:drop-shadow-[0_0_10px_rgba(57,255,20,0.8)] group-hover:scale-110" />
                 <span className="text-xs font-space font-medium uppercase tracking-wider text-gray-400 group-hover:text-white transition-colors relative">
@@ -63,10 +61,28 @@ export default function RootLayout({
                 </span>
               </a>
 
+              {/* NOVA SECÇÃO: Guias de Cultivo */}
+              <a href="#" className="group flex flex-col items-center gap-1 cursor-pointer">
+                <BookOpen className="h-6 w-6 text-2xl text-[#39FF14] opacity-50 group-hover:opacity-100 transition-all duration-300 group-hover:drop-shadow-[0_0_10px_rgba(57,255,20,0.8)] group-hover:scale-110" />
+                <span className="text-xs font-space font-medium uppercase tracking-wider text-gray-400 group-hover:text-white transition-colors relative">
+                  Guias de Cultivo
+                  <span className="absolute -bottom-2 left-1/2 w-0 h-[2px] bg-[#39FF14] group-hover:w-full group-hover:left-0 transition-all duration-300" />
+                </span>
+              </a>
+
               <a href="#" className="group flex flex-col items-center gap-1 cursor-pointer">
                 <Dna className="h-6 w-6 text-2xl text-[#39FF14] opacity-50 group-hover:opacity-100 transition-all duration-300 group-hover:drop-shadow-[0_0_10px_rgba(57,255,20,0.8)] group-hover:scale-110" />
                 <span className="text-xs font-space font-medium uppercase tracking-wider text-gray-400 group-hover:text-white transition-colors relative">
                   Genéticas
+                  <span className="absolute -bottom-2 left-1/2 w-0 h-[2px] bg-[#39FF14] group-hover:w-full group-hover:left-0 transition-all duration-300" />
+                </span>
+              </a>
+
+              {/* NOVA SECÇÃO: Bancos de Semente */}
+              <a href="#" className="group flex flex-col items-center gap-1 cursor-pointer">
+                <Sprout className="h-6 w-6 text-2xl text-[#39FF14] opacity-50 group-hover:opacity-100 transition-all duration-300 group-hover:drop-shadow-[0_0_10px_rgba(57,255,20,0.8)] group-hover:scale-110" />
+                <span className="text-xs font-space font-medium uppercase tracking-wider text-gray-400 group-hover:text-white transition-colors relative">
+                  Bancos de Semente
                   <span className="absolute -bottom-2 left-1/2 w-0 h-[2px] bg-[#39FF14] group-hover:w-full group-hover:left-0 transition-all duration-300" />
                 </span>
               </a>
@@ -88,7 +104,7 @@ export default function RootLayout({
               </a>
             </div>
 
-            {/* REMOVIDO: Botão Acessar */}
+            {/* Mobile Menu */}
             <div className="md:hidden text-white cursor-pointer hover:text-[#39FF14] transition-colors">
               <Menu size={32} />
             </div>

@@ -4,7 +4,7 @@ import { Orbitron, Space_Grotesk, Share_Tech_Mono } from "next/font/google";
 import "./globals.css";
 import { Leaf, Dna, Users, Stethoscope, Menu, BookOpen, Sprout } from "lucide-react";
 
-/* ─── CARREGAMENTO DE FONTES (Next.js font optimization) ── */
+/* ─── CARREGAMENTO DE FONTES ── */
 const orbitron = Orbitron({
   subsets: ["latin"],
   variable: "--font-orbitron",
@@ -26,14 +26,12 @@ const shareTechMono = Share_Tech_Mono({
   display: "swap",
 });
 
-/* ─── METADATA ─────────────────────────────────────────── */
 export const metadata: Metadata = {
   title: "A Iguana Mary — Portal Cannábico",
   description: "Portal vertical de cannabis medicinal: genéticas de elite, guias de cultivo, profissionais e comunidade.",
   icons: { icon: "/favicon.ico" },
 };
 
-/* ─── LAYOUT ROOT ───────────────────────────────────────── */
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -46,33 +44,25 @@ export default function RootLayout({
 
         {/* ── FUNDO BASE ── */}
         <div className="fixed inset-0 z-[-1] bg-[#050505]">
-          {/* Grade cyberpunk */}
           <div className="absolute inset-0 bg-cyber-grid bg-grid-size cyber-grid-animated opacity-100" />
-          {/* Luzes de fundo suaves */}
           <div className="absolute left-1/4  top-1/3  h-[60vh] w-[50vw]  rounded-full bg-iguana-neon   opacity-[0.025] blur-[180px]" />
           <div className="absolute right-1/4 top-2/3  h-[50vh] w-[40vw]  rounded-full bg-iguana-purple opacity-[0.025] blur-[200px]" />
-          <div className="absolute left-1/2  bottom-0 h-[30vh] w-[60vw]  rounded-full bg-iguana-teal   opacity-[0.015] blur-[160px] -translate-x-1/2" />
+          {/* Corrigido o iguana-teal que não existia no tailwind */}
+          <div className="absolute left-1/2  bottom-0 h-[30vh] w-[60vw]  rounded-full bg-[#00E5FF] opacity-[0.015] blur-[160px] -translate-x-1/2" />
         </div>
 
-        {/* ── NAVBAR FIXA ─────────────────────────────────── */}
+        {/* ── NAVBAR FIXA ── */}
         <nav className="fixed top-0 left-0 right-0 z-50 h-20 transition-all duration-300">
-          {/* Backdrop */}
           <div className="absolute inset-0 bg-black/85 backdrop-blur-xl border-b border-iguana-neon/15 shadow-[0_2px_30px_rgba(0,0,0,0.9)]" />
-
-          {/* Linha decorativa inferior */}
           <div className="absolute bottom-0 left-0 right-0 h-[1px] neon-border-run opacity-50" />
 
           <div className="relative max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
 
             {/* ── LOGO ── */}
             <div className="flex items-center gap-3 cursor-pointer group select-none shrink-0">
+              {/* Corrigido o problema do onMouseEnter usando classes puras do Tailwind (group-hover) */}
               <div
-                className="relative p-1.5 rounded-xl bg-black border border-iguana-neon/25 transition-all duration-500"
-                style={{
-                  boxShadow: "0 0 15px rgba(57,255,20,0.08)",
-                }}
-                onMouseEnter={e => (e.currentTarget.style.boxShadow = "0 0 25px rgba(57,255,20,0.4), inset 0 0 15px rgba(57,255,20,0.1)")}
-                onMouseLeave={e => (e.currentTarget.style.boxShadow = "0 0 15px rgba(57,255,20,0.08)")}
+                className="relative p-1.5 rounded-xl bg-black border border-iguana-neon/25 transition-all duration-500 shadow-[0_0_15px_rgba(57,255,20,0.08)] group-hover:shadow-[0_0_25px_rgba(57,255,20,0.4),inset_0_0_15px_rgba(57,255,20,0.1)]"
               >
                 <Image
                   src="/logo-iguana.png"
@@ -110,11 +100,10 @@ export default function RootLayout({
                   href="#"
                   className="group flex flex-col items-center gap-1.5 cursor-pointer relative"
                 >
-                  <Icon className="h-4 w-4 text-iguana-neon/40 group-hover:text-iguana-neon transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-neon-green" />
+                  <Icon className="h-4 w-4 text-iguana-neon/40 group-hover:text-iguana-neon transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_10px_rgba(57,255,20,0.8)]" />
                   <span className="font-space text-[10px] font-bold uppercase tracking-[0.18em] text-gray-500 group-hover:text-white transition-colors">
                     {label}
                   </span>
-                  {/* Underline animado */}
                   <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-[1px] bg-iguana-neon group-hover:w-full transition-all duration-300" />
                 </a>
               ))}
@@ -127,20 +116,17 @@ export default function RootLayout({
                 style={{ background: "rgba(57,255,20,0.03)" }}
               >
                 <span className="relative z-10">ENTRAR</span>
-                <span className="absolute inset-0 bg-iguana-neon/0 group-hover:bg-iguana-neon/8 transition-colors duration-300" />
+                <span className="absolute inset-0 bg-iguana-neon/0 group-hover:bg-iguana-neon/10 transition-colors duration-300" />
               </button>
             </div>
 
-            {/* ── MOBILE MENU ── */}
             <button className="lg:hidden text-white hover:text-iguana-neon transition-colors p-2">
               <Menu size={28} />
             </button>
           </div>
         </nav>
 
-        {/* ── CONTEÚDO PRINCIPAL ── */}
         <main className="pt-20 min-h-screen relative z-10">{children}</main>
-
       </body>
     </html>
   );

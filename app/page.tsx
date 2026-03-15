@@ -5,7 +5,7 @@ import { motion, AnimatePresence, useInView } from "framer-motion";
 import { Dna, Zap, Shield, ChevronRight, Star } from "lucide-react";
 
 /* ═══════════════════════════════════════════════════════════
-   1. SISTEMA DE CHUVA DE FOLHAS
+   1. SISTEMA DE CHUVA DE FOLHAS (OTIMIZADO + VISÍVEL)
 ═══════════════════════════════════════════════════════════ */
 type LeafProps = {
   id: number; left: string; size: number; duration: number; delay: number;
@@ -19,17 +19,23 @@ function LeafRain() {
   const [leaves, setLeaves] = useState<LeafProps[]>([]);
 
   useEffect(() => {
-    const gen: LeafProps[] = Array.from({ length: 28 }, (_, i) => {
+    // Reduzido para 20 folhas para matar o lag, mantendo o volume visual
+    const gen: LeafProps[] = Array.from({ length: 20 }, (_, i) => {
       const rgb = LEAF_PALETTES[Math.floor(Math.random() * LEAF_PALETTES.length)];
       const isFront = Math.random() > 0.65;
+      
+      // +20% de opacidade (visibilidade) aplicada aqui
+      const baseOpacity = 0.25 + Math.random() * 0.15;
+      const glowOpacity = 0.40 + Math.random() * 0.30;
+
       return {
         id: i, left: `${Math.random() * 120 - 10}vw`,
         size: isFront ? 40 + Math.random() * 45 : 18 + Math.random() * 28,
         duration: 13 + Math.random() * 18, delay: Math.random() * -28,
         drift: `${(Math.random() - 0.5) * 65}vw`, rotation: `${(Math.random() - 0.5) * 720}deg`,
-        colorBg: `rgba(${rgb}, ${(0.04 + Math.random() * 0.14).toFixed(2)})`,
-        colorGlow: `rgba(${rgb}, ${(0.2 + Math.random() * 0.45).toFixed(2)})`,
-        zIndex: isFront ? 30 : 8, blur: 3 + Math.random() * 6,
+        colorBg: `rgba(${rgb}, ${baseOpacity.toFixed(2)})`,
+        colorGlow: `rgba(${rgb}, ${glowOpacity.toFixed(2)})`,
+        zIndex: isFront ? 30 : 8, blur: 1 + Math.random() * 3, // Blur menor para otimização de CPU
       };
     });
     setLeaves(gen);
@@ -44,6 +50,7 @@ function LeafRain() {
             left: leaf.left, width: `${leaf.size}px`, height: `${leaf.size * 1.12}px`,
             zIndex: leaf.zIndex, "--drift": leaf.drift, "--rotation": leaf.rotation,
             animation: `fallingLeaf ${leaf.duration}s linear ${leaf.delay}s infinite`,
+            willChange: "transform", // Ativa aceleração de hardware (Mata o lag)
           } as React.CSSProperties}
         >
           <div
@@ -53,7 +60,7 @@ function LeafRain() {
               WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat", WebkitMaskPosition: "center", maskPosition: "center",
               backdropFilter: `blur(${leaf.blur}px)`, WebkitBackdropFilter: `blur(${leaf.blur}px)`,
               background: `linear-gradient(135deg, ${leaf.colorBg} 0%, rgba(0,0,0,0) 100%)`,
-              boxShadow: `inset 0 0 ${leaf.size * 0.4}px ${leaf.colorGlow}`, border: "1px solid rgba(255,255,255,0.04)",
+              boxShadow: `inset 0 0 ${leaf.size * 0.4}px ${leaf.colorGlow}`, border: "1px solid rgba(255,255,255,0.1)",
             }}
           />
         </div>
@@ -84,7 +91,7 @@ function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: str
 }
 
 /* ═══════════════════════════════════════════════════════════
-   3. DADOS DAS GENÉTICAS
+   3. DADOS DAS GENÉTICAS (Com Associações)
 ═══════════════════════════════════════════════════════════ */
 const GENETICS_DB = [
   {
@@ -92,18 +99,43 @@ const GENETICS_DB = [
     terpenes: "Limoneno · Mirceno", flowering: "8–9 Semanas", origin: "Haze × Jack Herer",
     effects: ["Euforia", "Criatividade", "Foco"], color: "#FFE86B", colorRgb: "255, 232, 107",
     image: "/lebron.jpg", badge: "SATIVA", rating: 4.8,
+    associacoes: [] // Sem associação (Botão some)
   },
   {
     id: "gorilla", name: "Gorilla Glue", type: "HÍBRIDA EQUILIBRADA", thc: "26%", cbd: "1%",
     terpenes: "Cariofileno · Mirceno", flowering: "9–10 Semanas", origin: "Chem's Sis × Sour Dubb",
     effects: ["Relaxamento", "Euforia", "Sono"], color: "#39FF14", colorRgb: "57, 255, 20",
     image: "/gorilla.jpg", badge: "HÍBRIDA", rating: 4.9,
+    associacoes: ["ACAFLOR"] // Tem associação (Botão aparece)
   },
   {
     id: "pineapple", name: "Pineapple Kush", type: "INDICA DOMINANTE", thc: "18%", cbd: "2%",
     terpenes: "Pineno · Linalol", flowering: "8 Semanas", origin: "Pineapple × OG Kush",
     effects: ["Relaxamento", "Dor", "Ansiedade"], color: "#8A2BE2", colorRgb: "138, 43, 226",
     image: "/pineapple.png", badge: "INDICA", rating: 4.7,
+    associacoes: ["Maria Flor"] 
+  },
+  // Clonados apenas para preencher a fileira extra e criar o efeito de corte
+  {
+    id: "sour", name: "Sour Diesel", type: "SATIVA DOMINANTE", thc: "21%", cbd: "1%",
+    terpenes: "Limoneno · Cariofileno", flowering: "10 Semanas", origin: "Chemdawg × Super Skunk",
+    effects: ["Energia", "Foco", "Criatividade"], color: "#FFE86B", colorRgb: "255, 232, 107",
+    image: "/lebron.jpg", badge: "SATIVA", rating: 4.9,
+    associacoes: [] 
+  },
+  {
+    id: "widow", name: "White Widow", type: "HÍBRIDA", thc: "19%", cbd: "1%",
+    terpenes: "Mirceno · Pineno", flowering: "8 Semanas", origin: "Sativa BR × Indica IN",
+    effects: ["Relaxamento", "Felicidade", "Fome"], color: "#39FF14", colorRgb: "57, 255, 20",
+    image: "/gorilla.jpg", badge: "HÍBRIDA", rating: 4.6,
+    associacoes: ["Cultiva Brasil"] 
+  },
+  {
+    id: "dream", name: "Blue Dream", type: "SATIVA DOMINANTE", thc: "24%", cbd: "2%",
+    terpenes: "Mirceno · Pineno", flowering: "9 Semanas", origin: "Blueberry × Haze",
+    effects: ["Euforia", "Relaxamento", "Criatividade"], color: "#8A2BE2", colorRgb: "138, 43, 226",
+    image: "/pineapple.png", badge: "SATIVA", rating: 4.8,
+    associacoes: [] 
   },
 ];
 
@@ -149,14 +181,14 @@ function GeneticsCard({ data, isActive, onClick }: { data: (typeof GENETICS_DB)[
         {!isActive && (
           <div className="absolute bottom-4 inset-x-0 text-center z-20">
             <p className="font-space text-[11px] font-bold tracking-widest text-white/40 uppercase">{data.name}</p>
-            <p className="font-mono text-[9px] text-white/20 mt-0.5 uppercase tracking-wider">Clique para decodificar</p>
+            <p className="font-mono text-[9px] text-white/20 mt-0.5 uppercase tracking-wider">Clique para analisar o card</p>
           </div>
         )}
 
         {isActive && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="absolute top-10 inset-x-0 text-center z-30">
             <p className="font-mono text-[9px] uppercase tracking-[0.3em] animate-pulse" style={{ color: "rgba(255,80,80,0.9)", textShadow: "0 0 10px rgba(255,50,50,0.8)" }}>
-              ⬡ CONTENÇÃO DESTRAVADA
+              ⬡ DADOS DECODIFICADOS
             </p>
           </motion.div>
         )}
@@ -183,8 +215,13 @@ function GeneticsCard({ data, isActive, onClick }: { data: (typeof GENETICS_DB)[
                 </div>
                 <div className="mt-4 flex flex-col gap-2">
                   <button className="w-full py-2.5 text-white text-[10px] font-space font-bold uppercase tracking-widest rounded-sm transition-all duration-300 hover:scale-[1.02] active:scale-95" style={{ background: `rgb(${data.colorRgb})`, color: "#000", boxShadow: `0 0 20px rgba(${data.colorRgb},0.4)` }}>Adquirir Semente</button>
-                  <button className="w-full py-2 bg-transparent text-black border border-black/20 text-[10px] font-space font-bold uppercase tracking-widest rounded-sm hover:bg-black hover:text-white transition-colors duration-300">Ver Perfil Completo →</button>
-                  <button className="w-full py-2 bg-transparent text-black border border-black/20 text-[10px] font-space font-bold uppercase tracking-widest rounded-sm hover:bg-black hover:text-white transition-colors duration-300">Buscar Associação</button>
+                  
+                  {/* BOTÃO INTELIGENTE: Só aparece se a array de associações não estiver vazia */}
+                  {data.associacoes.length > 0 && (
+                    <button className="w-full py-2 bg-transparent text-black border border-black/50 text-[10px] font-space font-bold uppercase tracking-widest rounded-sm hover:bg-black hover:text-white transition-colors duration-300">
+                      Buscar via Associação
+                    </button>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -259,12 +296,11 @@ function FeaturesSection() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   7. SEÇÃO: CTA TERMINAL
+   7. SEÇÃO: CTA TERMINAL (Sem contas, foco em Comunidade)
 ═══════════════════════════════════════════════════════════ */
 function TerminalCTA() {
   const [typed, setTyped] = useState("");
   const full = "> acesso liberado para usuário medicinal_br...";
-  // CORREÇÃO: O TypeScript exigia um HTMLElement genérico por ser usado numa <section>
   const inViewRef = useRef<HTMLElement>(null);
   const inView = useInView(inViewRef, { once: true, margin: "-100px" });
 
@@ -287,11 +323,11 @@ function TerminalCTA() {
         </div>
         <div className="p-8 md:p-12">
           <p className="font-mono text-[11px] text-iguana-neon/50 mb-2 tracking-widest">{typed}{typed.length < full.length && (<span className="inline-block w-2 h-3.5 bg-iguana-neon animate-blink ml-0.5" />)}</p>
-          <h2 className="font-space font-black text-2xl md:text-4xl text-white mt-6 mb-4 leading-tight">FAÇA PARTE DA<br /><span className="text-iguana-neon neon-flicker" style={{ textShadow: "0 0 30px rgba(57,255,20,0.6)" }}>COMUNIDADE</span></h2>
-          <p className="font-body text-gray-500 text-sm max-w-lg leading-relaxed mb-8">Acesse guias exclusivos, conecte-se com outros pacientes e cultive com segurança e conhecimento de elite.</p>
+          <h2 className="font-space font-black text-2xl md:text-4xl text-white mt-6 mb-4 leading-tight">FAÇA PARTE DA<br /><span className="text-iguana-neon neon-flicker" style={{ textShadow: "0 0 30px rgba(57,255,20,0.6)" }}>COMUNIDADE VIP</span></h2>
+          <p className="font-body text-gray-500 text-sm max-w-lg leading-relaxed mb-8">Acesse guias de cultivo avançados, tire dúvidas com especialistas e conecte-se com cultivadores e pacientes de todo o Brasil no nosso canal fechado.</p>
           <div className="flex flex-col sm:flex-row gap-3">
-            <motion.button className="relative font-space font-bold text-sm tracking-widest uppercase px-8 py-3.5 text-black rounded-sm overflow-hidden group" style={{ background: "#39FF14", boxShadow: "0 0 30px rgba(57,255,20,0.4)" }} whileHover={{ scale: 1.02, boxShadow: "0 0 50px rgba(57,255,20,0.6)" }} whileTap={{ scale: 0.97 }}>Criar Conta Grátis</motion.button>
-            <motion.button className="font-space font-bold text-sm tracking-widest uppercase px-8 py-3.5 border border-white/15 text-gray-400 hover:text-white hover:border-white/30 rounded-sm transition-all duration-300" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>Ver Genéticas →</motion.button>
+            <motion.button className="relative font-space font-bold text-sm tracking-widest uppercase px-8 py-3.5 text-black rounded-sm overflow-hidden group" style={{ background: "#39FF14", boxShadow: "0 0 30px rgba(57,255,20,0.4)" }} whileHover={{ scale: 1.02, boxShadow: "0 0 50px rgba(57,255,20,0.6)" }} whileTap={{ scale: 0.97 }}>Acessar Telegram</motion.button>
+            <motion.button className="font-space font-bold text-sm tracking-widest uppercase px-8 py-3.5 border border-white/15 text-gray-400 hover:text-white hover:border-white/30 rounded-sm transition-all duration-300" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>Seguir no Instagram →</motion.button>
           </div>
           <p className="font-mono text-[9px] text-gray-700 mt-6 uppercase tracking-wider">⬡ Portal educativo · Cannabis medicinal · BR · ANVISA compliant</p>
         </div>
@@ -310,6 +346,7 @@ export default function Home() {
   return (
     <div className="relative w-full overflow-x-hidden selection:bg-iguana-neon selection:text-black">
       <div className="pointer-events-none fixed inset-0 z-[5] overflow-hidden"><LeafRain /></div>
+      
       <section className="relative z-20 min-h-[92vh] flex flex-col items-center justify-center text-center px-6 pt-8">
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="mb-6 inline-flex items-center gap-2 border border-iguana-neon/20 bg-iguana-neon/5 px-4 py-2 rounded-full">
           <span className="w-1.5 h-1.5 rounded-full bg-iguana-neon animate-pulse" /><span className="font-mono text-[10px] uppercase tracking-[0.3em] text-iguana-neon/70">Portal Cannábico Brasileiro</span>
@@ -337,14 +374,34 @@ export default function Home() {
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.6 }} className="text-center mb-16">
           <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-iguana-neon/60 mb-3">⬡ BANCO DE DADOS ENCRIPTADO ⬡</p>
           <h2 className="font-space font-black text-3xl md:text-5xl text-white tracking-wide">COFRE DE GENÉTICAS</h2>
-          <p className="font-body mt-4 text-gray-600 text-sm uppercase tracking-widest font-mono">Clique no frasco para decodificar</p>
+          <p className="font-body mt-4 text-gray-600 text-sm uppercase tracking-widest font-mono">Decodifique as strains disponíveis</p>
         </motion.div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 items-start">
-          {GENETICS_DB.map((g, i) => (
-            <motion.div key={g.id} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }} transition={{ duration: 0.5, delay: i * 0.1 }}>
-              <GeneticsCard data={g} isActive={activeGenetic === g.id} onClick={() => setActiveGenetic(activeGenetic === g.id ? null : g.id)} />
-            </motion.div>
-          ))}
+
+        {/* VITRINE CORTADA (1.5 Fileiras + Degradê sobreposto) */}
+        <div className="relative w-full max-h-[520px] overflow-hidden rounded-b-2xl">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 items-start pb-40">
+            {GENETICS_DB.map((g, i) => (
+              <motion.div key={g.id} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }} transition={{ duration: 0.5, delay: i * 0.1 }}>
+                <GeneticsCard data={g} isActive={activeGenetic === g.id} onClick={() => setActiveGenetic(activeGenetic === g.id ? null : g.id)} />
+              </motion.div>
+            ))}
+          </div>
+
+          {/* O FADE NEGRO E O BOTÃO GIGANTE (Isca visual) */}
+          <div className="absolute bottom-0 left-0 w-full h-[280px] bg-gradient-to-t from-[#050505] via-[#050505]/90 to-transparent flex flex-col items-center justify-end pb-8 z-30">
+            <motion.button 
+              className="relative font-space font-black text-sm md:text-base tracking-[0.2em] uppercase px-10 py-5 text-black rounded-sm overflow-hidden group border border-iguana-neon shadow-[0_0_50px_rgba(57,255,20,0.15)]"
+              style={{ background: "#39FF14" }}
+              whileHover={{ scale: 1.05, boxShadow: "0 0 80px rgba(57,255,20,0.4)" }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <span className="relative z-10 flex items-center gap-3">
+                ACESSAR TODAS AS GENÉTICAS
+                <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </span>
+              <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+            </motion.button>
+          </div>
         </div>
       </section>
 

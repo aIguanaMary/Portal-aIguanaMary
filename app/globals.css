@@ -2,29 +2,248 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── VARIÁVEIS GLOBAIS ──────────────────────────────── */
 :root {
-  --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 10, 10, 10;
-  --background-end-rgb: 0, 0, 0;
+  --neon-green:  #39FF14;
+  --neon-purple: #8A2BE2;
+  --neon-teal:   #00e5ff;
+  --neon-amber:  #FFE86B;
+  --dark-bg:     #050505;
+  --dark-card:   #0a0a0a;
+  --dark-surface: #0f1a0f;
+  --text-primary: #e8ffe8;
+  --text-muted:   #4a7a5a;
 }
 
+/* ─── BASE ─────────────────────────────────────────────── */
 body {
-  color: rgb(var(--foreground-rgb));
-  background: #0a0a0a;
-  overflow-x: hidden; /* Evita scroll horizontal indesejado */
+  color: #ffffff;
+  background: var(--dark-bg);
+  overflow-x: hidden;
 }
 
-/* Custom Scrollbar Cyberpunk */
-::-webkit-scrollbar {
-  width: 8px;
+/* ─── SCROLLBAR CYBERPUNK ───────────────────────────────── */
+::-webkit-scrollbar       { width: 6px; }
+::-webkit-scrollbar-track { background: #050505; }
+::-webkit-scrollbar-thumb { background: #1a2e1a; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--neon-green); box-shadow: 0 0 8px var(--neon-green); }
+
+/* ─── SELECTION ─────────────────────────────────────────── */
+::selection { background: var(--neon-green); color: #000; }
+
+/* ─── KEYFRAMES ─────────────────────────────────────────── */
+
+/* Chuva de Folhas */
+@keyframes fallingLeaf {
+  0%   { transform: translateY(0)     translateX(0)           rotate(0deg); opacity: 0; }
+  5%   { opacity: 1; }
+  85%  { opacity: 0.9; }
+  100% { transform: translateY(115vh) translateX(var(--drift)) rotate(var(--rotation)); opacity: 0; }
 }
-::-webkit-scrollbar-track {
-  background: #0a0a0a; 
+
+/* Glitch do Hero */
+@keyframes glitch-1 {
+  0%, 100% { clip-path: inset(0 0 96% 0); transform: translate(-3px, 0); }
+  20%      { clip-path: inset(30% 0 50% 0); transform: translate(3px, 0); }
+  40%      { clip-path: inset(70% 0 10% 0); transform: translate(-2px, 0); }
+  60%      { clip-path: inset(10% 0 85% 0); transform: translate(2px, 0); }
+  80%      { clip-path: inset(55% 0 35% 0); transform: translate(-1px, 0); }
 }
-::-webkit-scrollbar-thumb {
-  background: #333; 
-  border-radius: 4px;
+@keyframes glitch-2 {
+  0%, 100% { clip-path: inset(55% 0 35% 0); transform: translate(3px, 0); }
+  20%      { clip-path: inset(5%  0 90% 0); transform: translate(-3px, 0); }
+  40%      { clip-path: inset(80% 0 5%  0); transform: translate(1px, 0); }
+  60%      { clip-path: inset(25% 0 65% 0); transform: translate(-2px, 0); }
+  80%      { clip-path: inset(65% 0 20% 0); transform: translate(3px, 0); }
 }
-::-webkit-scrollbar-thumb:hover {
-  background: #39FF14; /* Verde Neon no hover */
+
+/* Scanner de luz */
+@keyframes scan-down {
+  0%   { top: -10%; opacity: 0; }
+  5%   { opacity: 1; }
+  95%  { opacity: 1; }
+  100% { top: 110%; opacity: 0; }
+}
+
+/* Pulso Neon */
+@keyframes neon-pulse {
+  0%, 100% { text-shadow: 0 0 10px var(--neon-green), 0 0 30px var(--neon-green), 0 0 60px var(--neon-green); }
+  50%       { text-shadow: 0 0 5px  var(--neon-green), 0 0 15px var(--neon-green); }
+}
+
+/* Borda Neon Animada */
+@keyframes border-run {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* Flicker (cintilação de néon) */
+@keyframes flicker {
+  0%, 95%, 97%, 100% { opacity: 1; }
+  96%                 { opacity: 0.3; }
+}
+
+/* Float suave */
+@keyframes float-y {
+  0%, 100% { transform: translateY(0px) rotateY(0deg); }
+  50%       { transform: translateY(-14px) rotateY(8deg); }
+}
+
+/* Reveal de baixo */
+@keyframes slide-up-fade {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Contador pulsante */
+@keyframes count-glow {
+  0%, 100% { filter: drop-shadow(0 0 8px var(--neon-green)); }
+  50%       { filter: drop-shadow(0 0 20px var(--neon-green)); }
+}
+
+/* DNA helix orbital */
+@keyframes orbit {
+  from { transform: rotate(0deg)   translateX(18px) rotate(0deg); }
+  to   { transform: rotate(360deg) translateX(18px) rotate(-360deg); }
+}
+
+/* Terminal blink */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* Grade deslizante */
+@keyframes grid-drift {
+  to { background-position: 40px 40px; }
+}
+
+/* Holograma shimmer */
+@keyframes holo-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+/* Radar sweep */
+@keyframes radar-sweep {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ─── UTILITÁRIOS CUSTOMIZADOS ────────────────────────── */
+@layer utilities {
+
+  /* Grid cyberpunk animado */
+  .cyber-grid-animated {
+    background-image:
+      linear-gradient(to right, rgba(57,255,20,0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(57,255,20,0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: grid-drift 40s linear infinite;
+  }
+
+  /* Texto glitch */
+  .glitch-text {
+    position: relative;
+  }
+  .glitch-text::before,
+  .glitch-text::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    color: inherit;
+  }
+  .glitch-text::before {
+    color: #ff00ea;
+    animation: glitch-1 4s infinite linear;
+  }
+  .glitch-text::after {
+    color: var(--neon-teal);
+    animation: glitch-2 4s infinite linear;
+  }
+
+  /* Borda neon com gradiente correndo */
+  .neon-border-run {
+    background: linear-gradient(90deg,
+      transparent 0%,
+      var(--neon-green) 25%,
+      var(--neon-purple) 50%,
+      var(--neon-green) 75%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: border-run 3s linear infinite;
+  }
+
+  /* Texto neon verde */
+  .text-neon-green {
+    color: var(--neon-green);
+    text-shadow:
+      0 0 10px var(--neon-green),
+      0 0 30px rgba(57,255,20,0.5);
+  }
+
+  /* Glow card */
+  .card-glow-green {
+    box-shadow:
+      inset 0 0 30px rgba(57,255,20,0.05),
+      0 0 0 1px rgba(57,255,20,0.15),
+      0 20px 60px rgba(0,0,0,0.8);
+  }
+  .card-glow-green:hover {
+    box-shadow:
+      inset 0 0 50px rgba(57,255,20,0.08),
+      0 0 0 1px rgba(57,255,20,0.35),
+      0 0 40px rgba(57,255,20,0.12),
+      0 20px 60px rgba(0,0,0,0.8);
+  }
+
+  /* Hologram overlay */
+  .holo-overlay {
+    background: linear-gradient(
+      105deg,
+      transparent 30%,
+      rgba(57,255,20,0.06) 50%,
+      transparent 70%
+    );
+    background-size: 200% 100%;
+    animation: holo-shimmer 3s linear infinite;
+  }
+
+  /* Scanner de luz sobre imagem */
+  .scanner-line {
+    position: absolute;
+    left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg,
+      transparent,
+      rgba(57,255,20,0.8) 50%,
+      transparent
+    );
+    animation: scan-down 3s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  /* Float animation */
+  .float-anim {
+    animation: float-y 6s ease-in-out infinite;
+  }
+
+  /* Neon flicker */
+  .neon-flicker {
+    animation: flicker 5s infinite;
+  }
+
+  /* Texto terminal */
+  .font-terminal {
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+  }
+
+  /* Cursor piscando terminal */
+  .cursor-blink::after {
+    content: '█';
+    animation: blink 1s step-end infinite;
+    color: var(--neon-green);
+    margin-left: 2px;
+  }
 }
